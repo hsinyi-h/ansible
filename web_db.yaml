@@ -1,0 +1,51 @@
+# give a name to a play
+- name: Setup WebServer
+  # specify hosts that this play is going to apply to
+  hosts: websrvgrp
+  # to escalate the privilege
+  become: yes
+  # write the tasks to define what to run
+  tasks:
+    # give a name to a task to improve the readability
+    - name: Install Apache httpd
+      #give the module name
+      yum:
+         name: httpd
+         state: present
+    - name: Start $ Enable HTTPD
+      service:
+        name: httpd
+        state: started
+        enabled: yes
+    - name: Deploy web file
+      copy:
+        src: index.html
+        dest: /var/www/html/index.html
+
+- name: Setup DBServer
+  hosts: dbsvrgrp
+  become: yes
+  tasks:
+    - name: Install MySQL Server
+      yum:
+        name: mariadb-server
+        state: present
+    - name: Install Python MySQL
+      yum:
+        name: MySQL-python
+        state: present
+    - name: Start & Enable mariadb service
+      service:
+        name: mariadb
+        state: started
+        enabled: yes
+    - name: Create a new database with name accounts
+      mysql_db:
+        name: accounts
+        state: present
+    - name: Create database user with name 'admin' and password with all database privileges
+      mysql_user:
+        name: admin
+        password: password
+        priv: '*.*:ALL'
+        state: present
