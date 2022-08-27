@@ -1,0 +1,24 @@
+web01 ansible_host=172.31.6.165
+web02 ansible_host=172.31.3.129 
+db    ansible_host=172.31.3.205 
+
+# creating a group for web servers
+[websrvgrp]
+web01
+web02
+
+# creating a group for db server
+[dbsvrgrp]
+db
+
+# creating a group for all servers in Tokyo
+# groups inside groups. specify ":children" after the group name
+[dc_tokyo:children]
+websrvgrp
+dbsvrgrp
+
+# ansible_user and ansible_ssh_private_key_file are the same for all servers,
+# therefore, we can define the variables at the global level
+[dc_tokyo:vars]
+ansible_user=centos
+ansible_ssh_private_key_file="~/.ssh/id_rsa"
