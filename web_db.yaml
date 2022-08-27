@@ -1,3 +1,6 @@
+# to indicate the playbook starts, use ---
+# it's optional
+---
 # give a name to a play
 - name: Setup WebServer
   # specify hosts that this play is going to apply to
