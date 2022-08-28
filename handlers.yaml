@@ -1,0 +1,53 @@
+# Objective: practice handler
+# commone usage: restart system
+# Note: Handlers must be placed at the end of the playbook and will only be executed once if there is changes to the previous tasks
+---
+- name: Provisioning Servers
+  hosts: all
+  become: yes
+  tasks:
+    - name: Install packages on CentOS
+      yum:
+        name: "{{item}}"
+        state: present
+      when: ansible_distribution == "CentOS"
+      loop:
+        - ntp
+        - wget
+        - git
+        - zip
+        - unzip
+        - tree
+      notify:
+        - Restart apache
+
+    - name: Install packages on Ubuntu
+      apt:
+        name: "{{item}}"
+        state: present
+        # to run apt update before it installs a package
+        update_cache: yes
+      when: ansible_distribution == "Ubuntu"
+      loop:
+        - ntp
+        - wget
+        - git
+        - zip
+        - unzip
+        - tree
+      notify:
+        - Restart apache
+  handlers:
+    - name: Restart apache
+      service:
+        name: httpd
+        state: restarted
+        enabled: yes
+      when: ansible_os_family == "RedHat"
+    - name: Start & enable NTP on Debian
+      service:
+        name: httpd
+        state: restarted
+        enabled: yes
+      when: ansible_os_family == "Debian"
+
