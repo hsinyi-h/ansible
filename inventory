@@ -1,11 +1,13 @@
 web01 ansible_host=172.31.6.165
 web02 ansible_host=172.31.3.129 
-db    ansible_host=172.31.3.205 
+web03 ansible_host=172.31.3.149 ansible_user=ubuntu
+db    ansible_host=172.31.3.205
 
 # creating a group for web servers
 [websrvgrp]
 web01
 web02
+web03
 
 # creating a group for db server
 [dbsvrgrp]
@@ -22,3 +24,4 @@ dbsvrgrp
 [dc_tokyo:vars]
 ansible_user=centos
 ansible_ssh_private_key_file="~/.ssh/id_rsa"
+
